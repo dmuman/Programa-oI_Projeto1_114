@@ -1,0 +1,12 @@
+﻿Organization:
+SmartH
+Hour:
+10h00
+Day: 
+10:12:2023
+Doctors:
+Abílio Amaral, 1, 11h10, 180, 28h00
+Bernardo Biscaia, 3, 10h40, 80, 7h20
+Carlos Castro, 2, 10h20, 120, 32h00
+Duarte Dantas, 3, 11h10, 270, 15h00
+
