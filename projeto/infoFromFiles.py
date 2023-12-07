@@ -1,11 +1,26 @@
-#-*- coding: utf-8 -*-
-
 # 2023-2024 Programação 1 (LTI)
 # Grupo 114
 # 59348 Dmytro Umanskyi 
 # 62263 Eduardo Rocha
 
 from constants import *
+from dateTime import *
+
+
+
+def removeHeader(file):
+    """
+    Skips a set number of lines of text in a given .txt file.
+
+    Requires:
+    file is str with the name of a .txt file as in the examples provided in
+    the general specification (omitted here for the sake of readability).
+    Ensures:
+    That a set number of lines are skipped when reading the .txt file.
+    """
+    for _ in range(NUM_HEADER_LINES):
+        file.readline()
+    return file
 
 
 def readDoctorsFile(fileName):
@@ -21,20 +36,23 @@ def readDoctorsFile(fileName):
     the file fileName (with all the info pieces belonging to that doctor),
     following the order provided in the lines of the file.
     """
-    inFile = removeHeader(open(fileName, "r"))       
+
+    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
 
     doctorsList = [] 
     for line in inFile:
         doctorsData = line.rstrip().split(", ")
-        doctorsList.append(doctorsData)        
+        if len(doctorsData) != 1:
+            doctorsList.append(doctorsData)
 
     return doctorsList
 
-
+#print(readDoctorsFile("doctors10h00.txt"))
 
 def readRequestsFile(fileName):
     """
-    Reads a file with a list of requested assistances with a given file name into a collection.
+    Reads a file with a list of requested assistances with a given file name into 
+    a collection.
 
     Requires:
     fileName is str with the name of a .txt file containing
@@ -46,19 +64,21 @@ def readRequestsFile(fileName):
     following the order provided in the lines of the file.
     """
 
-    inFile = removeHeader(open(fileName, "r"))       
+    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
 
     requestsList = [] 
     for line in inFile:
         requestData = line.rstrip().split(", ")
-        requestsList.append(requestData)        
+        if len(requestData) != 1:
+            requestsList.append(requestData)        
 
     return requestsList
 
 
 def readScheduleFile(fileName):
     """
-    Reads a file with an existing list of schedule with a given file name into a collection.
+    Reads a file with an existing list of schedule with a given file name into 
+    a collection.
 
     Requires:
     fileName is str with the name of a .txt file containing
@@ -70,42 +90,55 @@ def readScheduleFile(fileName):
     following the order provided in the lines of the file.
     """
 
-    inFile = removeHeader(open(fileName, "r"))       
+    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
 
     scheduleList = [] 
     for line in inFile:
         scheduleData = line.rstrip().split(", ")
-        scheduleList.append(scheduleData)        
+        if len(scheduleData) != 1:
+            scheduleList.append(scheduleData)        
 
     return scheduleList
 
-def removeHeader(file):
-
-    for _ in range(NUM_HEADER_LINES):
-        file.readline()
-    return file
-
 def saveHeader(file):
+    """
+    Stores
 
-    inFile = open(file, "r")
+    Requires:
+    file is str with the name of a .txt file as in the examples provided in
+    the general specification (omitted here for the sake of readability).
+    Ensures:
+    That a set number of lines are saved into a list when reading the .txt file.
+    """
+    inFile = open(file, "r", encoding = "utf-8")
 
     header = []
+    headertemp = []
+    headerData = []
     for _ in range(NUM_HEADER_LINES):
         headerData = inFile.readline()
-        header.append(headerData)
+        headertemp.append(headerData)
+    
+    for line in headertemp:
+        headertemp = line.rstrip().split(", ")
+        header.append(headertemp)
     #header = [inFile.readline() for _ in range(7)]
-
     return header
 
+
 def timeAndDataFromHeader(file):
+    """
+    $
 
-    inFile = saveHeader(file, "r")
+    Requires:
 
-    time = []
+    Ensures:
+    
+    """
+    timeList = saveHeader(file)[HEADER_TIME_IDX]
+    dateList = saveHeader(file)[HEADER_DATE_IDX]
+    
+    return [timeList, dateList]
 
-    data = []
-
-
-#print(readScheduleFile("schedule10h00.txt"))
-print(saveHeader("schedule10h00.txt"))
-
+print(timeAndDataFromHeader("doctors10h00.txt"))
+#print(readDoctorsFile("doctors10h00.txt"))
