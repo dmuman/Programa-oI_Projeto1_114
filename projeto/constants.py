@@ -32,4 +32,10 @@ DOCT_NAME_IDX = 0
 # Index of the element with the mother's name
 MOTH_NAME_IDX = 0
 
+# In a header
+# Index of the element with the header's time
+HEADER_TIME_IDX = 3
+# Index of the element with the header's date
+HEADER_DATE_IDX = 5
+
 
