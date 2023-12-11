@@ -6,9 +6,7 @@
 from constants import *
 from dateTime import *
 
-
-
-def removeHeader(file):
+def removeHeader(fileName):
     """
     Skips a set number of lines of text in a given .txt file.
 
@@ -18,10 +16,11 @@ def removeHeader(file):
     Ensures:
     That a set number of lines are skipped when reading the .txt file.
     """
-    for _ in range(NUM_HEADER_LINES):
-        file.readline()
-    return file
 
+    for _ in range(NUM_HEADER_LINES):
+        fileName.readline()
+
+    return fileName
 
 def readDoctorsFile(fileName):
     """
@@ -63,17 +62,27 @@ def readRequestsFile(fileName):
     the file fileName (with all the info pieces belonging to that request),
     following the order provided in the lines of the file.
     """
+    try:
 
-    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
+        inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
 
-    requestsList = [] 
-    for line in inFile:
-        requestData = line.rstrip().split(", ")
-        if len(requestData) != 1:
-            requestsList.append(requestData)        
+        timeInName = fileName[-9:-4]
 
-    return requestsList
+        if minutesToInt(timeInName) != 30:
+            raise ValueError("Time in requests is old")
+        else:
+            requestsList = [] 
+            for line in inFile:
+                requestData = line.rstrip().split(", ")
+                if len(requestData) != 1:
+                    requestsList.append(requestData)        
 
+        return requestsList
+    
+    except Exception as e:
+        print(f"error {e}")
+
+#print(readRequestsFile("requests10h30.txt"))
 
 def readScheduleFile(fileName):
     """
@@ -90,7 +99,7 @@ def readScheduleFile(fileName):
     following the order provided in the lines of the file.
     """
 
-    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
+    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))      
 
     scheduleList = [] 
     for line in inFile:
@@ -99,6 +108,8 @@ def readScheduleFile(fileName):
             scheduleList.append(scheduleData)        
 
     return scheduleList
+
+print(readScheduleFile("schedule10h00.txt"))
 
 def saveHeader(file):
     """
@@ -140,5 +151,5 @@ def timeAndDataFromHeader(file):
     
     return [timeList, dateList]
 
-print(timeAndDataFromHeader("doctors10h00.txt"))
+#print(timeAndDataFromHeader("doctors10h00.txt"))
 #print(readDoctorsFile("doctors10h00.txt"))
