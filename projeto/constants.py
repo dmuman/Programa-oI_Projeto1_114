@@ -27,15 +27,31 @@ NUM_HEADER_LINES = 7
 # In a doctor's list:
 # Index of the element with the doctor's name
 DOCT_NAME_IDX = 0
+# Index of the element with the doctor's professional experience:
+DOCT_SKILL_IDX = 1
+# Index of the element with the planned time the childbirth assistance ends:
+DOCT_BIRTH_END_IDX = 2
+# Index of the element with the minutes accumulated since the beginning of the day:
+DOCT_DAILY_HOURS_IDX = 3
+# Index of the element with the hours and minutes accumulated since the last weekly rest:
+DOCT_REST_HOURS_IDX = 4
 
 # In a mother's list:
-# Index of the element with the mother's name
+# Index of the element with the mother's name:
 MOTH_NAME_IDX = 0
+# Index of the element with the mother's age:
+MOTH_AGE_IDX = 1
+# Index of the element with the mother's tag colour:
+MOTH_TAG_IDX = 2
+# Index of the element with the childbirth risk:
+MOTH_RISK_IDX = 3
 
 # In a header
 # Index of the element with the header's time
 HEADER_TIME_IDX = 3
 # Index of the element with the header's date
 HEADER_DATE_IDX = 5
+
+
 
 
