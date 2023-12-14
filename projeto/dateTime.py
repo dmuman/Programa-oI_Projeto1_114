@@ -151,6 +151,58 @@ def intToData(day, month, year):
 
     return data
 
+def updateHours(hoursToUpdate, minutesToAdd):
+    """
+    Updates the time with the given time to update and minutes to add. Time is in the format of HHhMM, minutes are integers.
+    Using converting time functions to get the hours and minutes and then to update those.
+    It has three cases:
+    If the added minutes ultrapassed 60(e.g. more than one hour)
+    If the added minutes is iqual 60(e.g. iqual one hour)
+    If the added minutes are less than 60(e.g. less than one hour)
+    It also ensures that the hours are between 0 and 23. In other words, 24h10 will be 00h10
+
+    Requires: hoursToUpdate is a string in the format of HHhMM, minutesToAdd is integer
+
+    Ensures: new, updated time with the given amount of minutes, in type string in the format of HHhMM
+
+    >>> updateHours("14h25", 40)
+    '15h05'
+    >>> updateHours("14h25", 35)
+    '15h00'
+    >>> updateHours("14h25", 30)
+    '14h55'
+    >>> updateHours("23h30", 40)
+    '00h10'
+    """
+    intHours = None
+    intMinutes = None
+    totalMinutes = None
+    updatedHours = None
+
+    if minutesToInt(hoursToUpdate) + minutesToAdd > 60:
+        intHours = hourToInt(hoursToUpdate)
+        intMinutes = minutesToInt(hoursToUpdate)
+        totalMinutes = intHours * 60 + intMinutes + minutesToAdd
+        updatedHours = intToTime((totalMinutes // 60), (totalMinutes % 60))
+
+    elif minutesToInt(hoursToUpdate) + minutesToAdd == 60:
+        intHours = hourToInt(hoursToUpdate) + 1
+        intMinutes = 0
+        updatedHours = intToTime(intHours, intMinutes)
+
+    else:
+        intHours = hourToInt(hoursToUpdate)
+        intMinutes = minutesToInt(hoursToUpdate) + minutesToAdd
+        updatedHours = intToTime(intHours, intMinutes)
+
+    if hourToInt(updatedHours) >= 24:
+        intHours = 0
+        intMinutes = minutesToInt(hoursToUpdate)
+        totalMinutes = intHours * 60 + intMinutes + minutesToAdd
+        updatedHours = intToTime(0, (totalMinutes % 60))
+
+    return updatedHours
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
