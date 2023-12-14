@@ -5,19 +5,17 @@
 # 59348 Dmytro Umanskyi 
 # 62263 Eduardo Rocha
 
-
-
 # This module records the constants used in the application
 
 # You should define here as many constants as you need to keep your 
 # code clean and legible
 
-
-
 # Value for weekly pause in the output schedule
 WKL_PAUSE = "weekly leave"
 
-
+# Value for redirected string and hours
+REDIR_HOURS = "HHhMM"
+REDIR_STR = "redirected to other network"
 
 # In a file:
 # Number of header's lines
@@ -51,7 +49,3 @@ MOTH_RISK_IDX = 3
 HEADER_TIME_IDX = 3
 # Index of the element with the header's date
 HEADER_DATE_IDX = 5
-
-
-
-
