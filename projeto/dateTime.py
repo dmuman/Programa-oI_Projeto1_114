@@ -156,9 +156,9 @@ def updateHours(hoursToUpdate, minutesToAdd):
     Updates the time with the given time to update and minutes to add. Time is in the format of HHhMM, minutes are integers.
     Using converting time functions to get the hours and minutes and then to update those.
     It has three cases:
-    If the added minutes ultrapassed 60(e.g. more than one hour)
-    If the added minutes is iqual 60(e.g. iqual one hour)
-    If the added minutes are less than 60(e.g. less than one hour)
+    If the added minutes ultrapassed 60(i.e. more than one hour)
+    If the added minutes is iqual 60(i.e. iqual one hour)
+    If the added minutes are less than 60(i.e. less than one hour)
     It also ensures that the hours are between 0 and 23. In other words, 24h10 will be 00h10
 
     Requires: hoursToUpdate is a string in the format of HHhMM, minutesToAdd is integer
