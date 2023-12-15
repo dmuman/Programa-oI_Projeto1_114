@@ -6,6 +6,7 @@
 from constants import *
 from dateTime import *
 
+
 def removeHeader(fileName):
     """
     Skips a set number of lines of text in a given .txt file.
@@ -22,94 +23,6 @@ def removeHeader(fileName):
 
     return fileName
 
-def readDoctorsFile(fileName):
-    """
-    Reads a file with a list of doctors with a given file name into a collection.
-
-    Requires:
-    fileName is str with the name of a .txt file containing
-    a list of doctors organized as in the examples provided in
-    the general specification (omitted here for the sake of readability).
-    Ensures:
-    list of lists where each list corresponds to a doctor listed in
-    the file fileName (with all the info pieces belonging to that doctor),
-    following the order provided in the lines of the file.
-    """
-
-    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
-
-    doctorsList = [] 
-    for line in inFile:
-        doctorsData = line.rstrip().split(", ")
-        if len(doctorsData) != 1:
-            doctorsList.append(doctorsData)
-
-    return doctorsList
-
-#print(readDoctorsFile("doctors10h00.txt"))
-
-def readRequestsFile(fileName):
-    """
-    Reads a file with a list of requested assistances with a given file name into 
-    a collection.
-
-    Requires:
-    fileName is str with the name of a .txt file containing
-    a list of requests organized as in the examples provided in
-    the general specification (omitted here for the sake of readability).
-    Ensures:
-    list of lists where each list corresponds to a request listed in
-    the file fileName (with all the info pieces belonging to that request),
-    following the order provided in the lines of the file.
-    """
-    try:
-
-        inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
-
-        timeInName = fileName[-9:-4]
-
-        if minutesToInt(timeInName) != 30:
-            raise ValueError("Time in requests is old")
-        else:
-            requestsList = [] 
-            for line in inFile:
-                requestData = line.rstrip().split(", ")
-                if len(requestData) != 1:
-                    requestsList.append(requestData)        
-
-        return requestsList
-    
-    except Exception as e:
-        print(f"error {e}")
-
-#print(readRequestsFile("requests10h30.txt"))
-
-def readScheduleFile(fileName):
-    """
-    Reads a file with an existing list of schedule with a given file name into 
-    a collection.
-
-    Requires:
-    fileName is str with the name of a .txt file containing
-    a list of schedules organized as in the examples provided in
-    the general specification (omitted here for the sake of readability).
-    Ensures:
-    list of lists where each list corresponds to a schedule listed in
-    the file fileName (with all the info pieces belonging to that schedule),
-    following the order provided in the lines of the file.
-    """
-
-    inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))      
-
-    scheduleList = [] 
-    for line in inFile:
-        scheduleData = line.rstrip().split(", ")
-        if len(scheduleData) != 1:
-            scheduleList.append(scheduleData)        
-
-    return scheduleList
-
-print(readScheduleFile("schedule10h00.txt"))
 
 def saveHeader(file):
     """
@@ -151,5 +64,113 @@ def timeAndDataFromHeader(file):
     
     return [timeList, dateList]
 
-#print(timeAndDataFromHeader("doctors10h00.txt"))
-#print(readDoctorsFile("doctors10h00.txt"))
+
+def readDoctorsFile(fileName):
+    """
+    Reads a file with a list of doctors with a given file name into a collection.
+
+    Requires:
+    fileName is str with the name of a .txt file containing
+    a list of doctors organized as in the examples provided in
+    the general specification (omitted here for the sake of readability).
+    Ensures:
+    list of lists where each list corresponds to a doctor listed in
+    the file fileName (with all the info pieces belonging to that doctor),
+    following the order provided in the lines of the file.
+    """
+    try:
+        inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
+
+        timeInName = fileName[-9:-4]
+        timeInHeader = timeAndDataFromHeader(fileName)[0]
+
+        if saveHeader(fileName)[6][0] != "Doctors:":
+            raise ValueError("scope inconsistency between name and header in file <name of file>")
+        elif timeInName != timeInHeader:
+            raise ValueError("time in the header and in the name are not the same")
+        else:
+            doctorsList = [] 
+            for line in inFile:
+                doctorsData = line.rstrip().split(", ")
+                if len(doctorsData) != 1:
+                    doctorsList.append(doctorsData)
+
+        return doctorsList
+    
+    except Exception as e:
+        print(f"File head error: {e}")
+
+
+def readRequestsFile(fileName):
+    """
+    Reads a file with a list of requested assistances with a given file name into 
+    a collection.
+
+    Requires:
+    fileName is str with the name of a .txt file containing
+    a list of requests organized as in the examples provided in
+    the general specification (omitted here for the sake of readability).
+    Ensures:
+    list of lists where each list corresponds to a request listed in
+    the file fileName (with all the info pieces belonging to that request),
+    following the order provided in the lines of the file.
+    """
+    try:
+
+        inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
+
+        timeInName = fileName[-9:-4]
+        timeInHeader = timeAndDataFromHeader(fileName)[0]
+
+        if saveHeader(fileName)[6][0] != "Mothers:":
+            raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
+        elif timeInName != timeInHeader:
+            raise ValueError("time in the header and in the name are not the same")
+        else:
+            requestsList = [] 
+            for line in inFile:
+                requestData = line.rstrip().split(", ")
+                if len(requestData) != 1:
+                    requestsList.append(requestData)        
+
+        return requestsList
+    
+    except Exception as e:
+        print(f"File head error: {e}")
+
+
+def readScheduleFile(fileName):
+    """
+    Reads a file with an existing list of schedule with a given file name into 
+    a collection.
+
+    Requires:
+    fileName is str with the name of a .txt file containing
+    a list of schedules organized as in the examples provided in
+    the general specification (omitted here for the sake of readability).
+    Ensures:
+    list of lists where each list corresponds to a schedule listed in
+    the file fileName (with all the info pieces belonging to that schedule),
+    following the order provided in the lines of the file.
+    """
+    try:
+        inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))      
+
+        timeInName = fileName[-9:-4]
+        timeInHeader = timeAndDataFromHeader(fileName)[0]
+
+        if saveHeader(fileName)[6][0] != "Schedule:":
+            raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
+        elif timeInName != timeInHeader:
+            raise ValueError("time in the header and in the name are not the same")
+        else: 
+            scheduleList = [] 
+            for line in inFile:
+                scheduleData = line.rstrip().split(", ")
+                if len(scheduleData) != 1:
+                    scheduleList.append(scheduleData)        
+
+        return scheduleList
+    
+    except Exception as e:
+        print(f"File head error: {e}")
