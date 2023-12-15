@@ -78,7 +78,7 @@ def readDoctorsFile(fileName):
         timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Doctors:":
-            raise ValueError("scope inconsistency between name and header in file <name of file>")
+            raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
         elif timeInName != timeInHeader:
             raise ValueError("time in the header and in the name are not the same")
         else:
