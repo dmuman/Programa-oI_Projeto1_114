@@ -9,8 +9,43 @@ from infoFromFiles import *
 from dateTime import *
 from constants import *
 
-def updateSchedule(doctors, requests, previousSched, nextTime):
+def sortRequests(requestlist):
 	"""
+    Sorts mothers
+	"""
+	risks={"high":1, "low":2}
+	tags={"red": 3, "yellow":2, "green":1}
+	return (-risks[requestlist[MOTH_RISK_IDX]], tags[requestlist[MOTH_TAG_IDX]],\
+          -int(requestlist[MOTH_AGE_IDX]), requestlist[MOTH_NAME_IDX])
+
+
+def sortDoctors(doctorsList):
+    """
+    Sorts doctors
+    """
+    
+    if int(doctorsList[DOCT_DAILY_HOURS_IDX]) > 240:
+        timeToPause = 240*2 - int(doctorsList[DOCT_DAILY_HOURS_IDX])
+    else:
+        timeToPause = 240 - int(doctorsList[DOCT_DAILY_HOURS_IDX])
+    timeToWeeklyPause = 40 * 60 - (hourToInt(doctorsList[DOCT_REST_HOURS_IDX]) * 60 + minutesToInt(doctorsList[DOCT_REST_HOURS_IDX]))
+
+    return (-int(doctorsList[DOCT_SKILL_IDX]), -timeToPause, -timeToWeeklyPause, doctorsList[DOCT_NAME_IDX])
+
+def sortSchedule(scheduleList):
+    """
+    Sorts schedule  
+    """
+    totalTime = None
+    if scheduleList[0] == REDIR_HOURS:
+        totalTime = hourToInt("23h59")*60 + minutesToInt("23h59")
+    else:
+        totalTime = hourToInt(scheduleList[0])*60 + minutesToInt(scheduleList[0])
+    
+    return totalTime
+
+def updateSchedule(doctors, requests, previousSched, nextTime):
+    """
     Update birth assistance schedule assigning the given birth assistance requested
     to the given doctors, taking into account a previous schedule.
 	
@@ -27,57 +62,60 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
 	the current update time (= previous update time + 30 minutes),
 	assigned according to the conditions indicated in the general specification
 	of the project (omitted here for the sake of readability).
-	"""
-	newSchedule = []
-	oldScheduleList = previousSched
-	oldDoctorsList = doctors
-	requestsList = requests
-	#currentUpdateTime = nextTime = requests[-9:-4]
-	oldTimes = []
-	for schedule in oldScheduleList:
-		for oldTime in range(len(schedule)):
-			if oldTime == 0:
-				oldTimes.append(schedule[oldTime])
+    """
+    horasAssigned = None
+    doctorAssigned = None
+    
+    headerOldSchedule = saveHeader(previousSched)
+    newScheduleList = []
 
-	oldDoctorsTime = {}
-	for doctor in oldDoctorsList:
-		for _ in doctor:
-			oldDoctorsTime[doctor[DOCT_NAME_IDX]] = doctor[DOCT_BIRTH_END_IDX]
+    #part for redirecting to the other network (works great)
+    for assignedTimeFromOldSchedule in readScheduleFile(previousSched):
+        if hourToInt(updateHours(assignedTimeFromOldSchedule[0], 20)) >= 20:
+            horasAssigned = REDIR_HOURS
+            doctorAssigned = REDIR_STR
+        else:
+            print("good")
 
-	doctorsSkills = {}
-	for doctor in oldDoctorsList:
-		for _ in doctor:
-			doctorsSkills[doctor[DOCT_NAME_IDX]] = doctor[DOCT_SKILL_IDX]
+    #part for adding mothers from the old schedule if the time of the appointment 
+    #is bigger than the time of the new schedule (works great)
+    for appointment in readScheduleFile(previousSched):
+        if hourToInt(appointment[0]) >= hourToInt(headerOldSchedule[HEADER_TIME_IDX][0])\
+              and minutesToInt(appointment[0]) >= minutesToInt(headerOldSchedule[HEADER_TIME_IDX][0])+30:
+            newScheduleList.append(appointment)
+            
+    assignedDoctors = []
 
-	requestsRisks = {}
-	for request in requestsList:
-		for _ in request:
-			requestsRisks[request[MOTH_NAME_IDX]] = request[MOTH_RISK_IDX]
+    mothersList = readRequestsFile(requests)
+    doctorsList = readDoctorsFile(doctors)
 
-	assignedDoctor = None
-	momDoctor = {}
-	highMoms = []
+    sortedMothers = sorted(mothersList, key=sortRequests)
+    sortedDoctors = sorted(doctorsList, key=sortDoctors)
 
-	for momName, risk in requestsRisks.items():
-		if risk == "high":
-			highMoms.append(momName)
-			print(highMoms)
-			for name, skill in doctorsSkills.items():
-				if int(skill) >= 2:
-					assignedDoctor = name
-					for mom in highMoms:
-						momDoctor[assignedDoctor] = mom
-	"""
-	oldHeader = saveHeader(previousSched)
-	newHeader = []
-	for i in range(len(oldHeader)):
-		if i == HEADER_TIME_IDX:
-			oldHeader[i] == f"{minutesToInt(oldHeader[i]) + 30}"
-		newHeader.append(i)"""
+    for mother in sortedMothers:
+        isDoctorAssigned = False
 
-	return momDoctor
+        for doctor in sortedDoctors:
+            if ((mother[MOTH_RISK_IDX] == "high" and int(doctor[DOCT_SKILL_IDX]) >= 2 and isDoctorAssigned == False)
+                or (mother[MOTH_RISK_IDX] == "low" and int(doctor[DOCT_SKILL_IDX]) >= 1 and isDoctorAssigned == False))\
+                         and doctor not in assignedDoctors:
+                horasAssigned = doctor[DOCT_BIRTH_END_IDX]
+                doctorAssigned = doctor[DOCT_NAME_IDX]
+                appointment = [horasAssigned, mother[MOTH_NAME_IDX], doctorAssigned]
+                newScheduleList.append(appointment)
+                assignedDoctors.append(doctor)
+                isDoctorAssigned = True
 
-print(updateSchedule("doctors10h00.txt", "requests10h30.txt", "schedule10h00.txt", "10h30"))
+        if not isDoctorAssigned:
+            horasAssigned = REDIR_HOURS
+            doctorAssigned = REDIR_STR
+            appointment = [horasAssigned, mother[MOTH_NAME_IDX], doctorAssigned]
+            newScheduleList.append(appointment)
+    newSortedScheduleList = sorted(newScheduleList, key=sortSchedule)
+    return newSortedScheduleList
+
+
+print(updateSchedule("doctors16h00.txt", "requests16h30.txt", "schedule16h00.txt", "10h30"))
 
 
 def updateDoctors(doctors, requests, previousSched, nextTime):
