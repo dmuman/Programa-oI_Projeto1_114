@@ -130,7 +130,8 @@ def intToData(day, month, year):
     and returns the data of type string with the look of 'day:month:year'.
     Day, month and year are separated by the two dots sign ':'.
 
-    Requires: day, month and year are positive integers, day is less than 32, month is less than 13 and year is equal to the current year(2023).
+    Requires: day, month and year are positive integers, day is less than 32, 
+    month is less than 13 and year is equal to the current year(2023).
     Ensures: string representation of the provided day, month and year, separated by the two dots sign ':'.
     >>> intToData(8, 1, 2023)
     '08:01:2023'
