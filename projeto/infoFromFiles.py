@@ -9,13 +9,10 @@ from dateTime import *
 
 def removeHeader(fileName):
     """
-    Skips a set number of lines of text in a given .txt file.
+    Skips the given amount of lines(NUM_HEADER_LINES) in a given file(i.e. header)
 
-    Requires:
-    file is str with the name of a .txt file as in the examples provided in
-    the general specification (omitted here for the sake of readability).
-    Ensures:
-    That a set number of lines are skipped when reading the .txt file.
+    Requires: fileName is already opened file, header is presented inside the file.
+    Ensures: that the given number of lines are skipped when reading the .txt file.
     """
 
     for _ in range(NUM_HEADER_LINES):
@@ -24,17 +21,14 @@ def removeHeader(fileName):
     return fileName
 
 
-def saveHeader(file):
+def saveHeader(fileName):
     """
-    Stores
+    Saves the header into a list, containing lists, each of one has the line of the header, corresponding to the index.
 
-    Requires:
-    file is str with the name of a .txt file as in the examples provided in
-    the general specification (omitted here for the sake of readability).
-    Ensures:
-    That a set number of lines are saved into a list when reading the .txt file.
+    Requires: fileName is a str with the ending of a .txt, header is presented inside the file.
+    Ensures: that the given number of lines(NUM_HEADER_LINES) are saved into a list when reading the .txt file(i.e. header)
     """
-    inFile = open(file, "r", encoding = "utf-8")
+    inFile = open(fileName, "r", encoding = "utf-8")
 
     header = []
     headertemp = []
@@ -46,21 +40,20 @@ def saveHeader(file):
     for line in headertemp:
         headertemp = line.rstrip().split(", ")
         header.append(headertemp)
-    #header = [inFile.readline() for _ in range(7)]
+
     return header
 
 
-def timeAndDataFromHeader(file):
+def timeAndDataFromHeader(fileName):
     """
-    $
+    Receives the str fileName with the .txt at the end, end then returns the list, 
+    containing time and data presented in the header. Header is given from the saveHeader() function.
 
-    Requires:
-
-    Ensures:
-    
+    Requires: fileName is a string with the .txt at the end. Header is presented inside the file.
+    Ensures: list, containing two lists that each has the corresponding time and data that are presented in the header.
     """
-    timeList = saveHeader(file)[HEADER_TIME_IDX]
-    dateList = saveHeader(file)[HEADER_DATE_IDX]
+    timeList = saveHeader(fileName)[HEADER_TIME_IDX]
+    dateList = saveHeader(fileName)[HEADER_DATE_IDX]
     
     return [timeList, dateList]
 
@@ -82,7 +75,7 @@ def readDoctorsFile(fileName):
         inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
 
         timeInName = fileName[-9:-4]
-        timeInHeader = timeAndDataFromHeader(fileName)[0]
+        timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Doctors:":
             raise ValueError("scope inconsistency between name and header in file <name of file>")
@@ -120,7 +113,7 @@ def readRequestsFile(fileName):
         inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))       
 
         timeInName = fileName[-9:-4]
-        timeInHeader = timeAndDataFromHeader(fileName)[0]
+        timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Mothers:":
             raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
@@ -157,7 +150,7 @@ def readScheduleFile(fileName):
         inFile = removeHeader(open(fileName, "r", encoding = "utf-8"))      
 
         timeInName = fileName[-9:-4]
-        timeInHeader = timeAndDataFromHeader(fileName)[0]
+        timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Schedule:":
             raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
