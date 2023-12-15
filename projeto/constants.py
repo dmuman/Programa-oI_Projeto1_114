@@ -5,10 +5,14 @@
 # 59348 Dmytro Umanskyi 
 # 62263 Eduardo Rocha
 
+
+
 # This module records the constants used in the application
 
 # You should define here as many constants as you need to keep your 
 # code clean and legible
+
+
 
 # Value for weekly pause in the output schedule
 WKL_PAUSE = "weekly leave"
