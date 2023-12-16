@@ -160,7 +160,6 @@ def updateHours(hoursToUpdate, minutesToAdd):
     If the added minutes ultrapassed 60(i.e. more than one hour)
     If the added minutes is iqual 60(i.e. iqual one hour)
     If the added minutes are less than 60(i.e. less than one hour)
-    It also ensures that the hours are between 0 and 23. In other words, 24h10 will be 00h10
 
     Requires: hoursToUpdate is a string in the format of HHhMM, minutesToAdd is integer
 
@@ -195,12 +194,6 @@ def updateHours(hoursToUpdate, minutesToAdd):
         intHours = hourToInt(hoursToUpdate)
         intMinutes = minutesToInt(hoursToUpdate) + minutesToAdd
         updatedHours = intToTime(intHours, intMinutes)
-
-    if hourToInt(updatedHours) >= 24:
-        intHours = 0
-        intMinutes = minutesToInt(hoursToUpdate)
-        totalMinutes = intHours * 60 + intMinutes + minutesToAdd
-        updatedHours = intToTime(0, (totalMinutes % 60))
 
     return updatedHours
 
