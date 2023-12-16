@@ -66,7 +66,6 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
     horasAssigned = None
     doctorAssigned = None
     
-    headerOldSchedule = saveHeader(previousSched)
     newScheduleList = []
 
     #part for redirecting to the other network (works great)
@@ -74,14 +73,12 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
         if hourToInt(updateHours(assignedTimeFromOldSchedule[0], 20)) >= 20:
             horasAssigned = REDIR_HOURS
             doctorAssigned = REDIR_STR
-        else:
-            print("good")
 
     #part for adding mothers from the old schedule if the time of the appointment 
     #is bigger than the time of the new schedule (works great)
     for appointment in readScheduleFile(previousSched):
-        if hourToInt(appointment[0]) >= hourToInt(headerOldSchedule[HEADER_TIME_IDX][0])\
-              and minutesToInt(appointment[0]) >= minutesToInt(headerOldSchedule[HEADER_TIME_IDX][0])+30:
+        if hourToInt(appointment[0]) >= hourToInt(nextTime)\
+              and minutesToInt(appointment[0]) >= minutesToInt(nextTime):
             newScheduleList.append(appointment)
             
     assignedDoctors = []
@@ -101,6 +98,9 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
                          and doctor not in assignedDoctors:
                 horasAssigned = doctor[DOCT_BIRTH_END_IDX]
                 doctorAssigned = doctor[DOCT_NAME_IDX]
+                
+                if hourToInt(horasAssigned)*60 + minutesToInt(horasAssigned) < hourToInt(nextTime)*60 + minutesToInt(nextTime):
+                    horasAssigned = nextTime
                 appointment = [horasAssigned, mother[MOTH_NAME_IDX], doctorAssigned]
                 newScheduleList.append(appointment)
                 assignedDoctors.append(doctor)
@@ -115,29 +115,41 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
     return newSortedScheduleList
 
 
-print(updateSchedule("doctors16h00.txt", "requests16h30.txt", "schedule16h00.txt", "10h30"))
+def updateDoctorsTime(oldDoctor, minutesToAdd):
+    """
+    
+    """
+    oldFreeHours = oldDoctor[DOCT_BIRTH_END_IDX]
+    oldMinutesDias = oldDoctor[DOCT_DAILY_HOURS_IDX]
+    oldHorasSemanais = oldDoctor[DOCT_REST_HOURS_IDX]
+    newFreeHours = None
+    newHorasSemanais = None
+    newMinutesDias = int(oldMinutesDias) + minutesToAdd
+    
+    if newMinutesDias >= 240:
+        newFreeHours = intToTime(hourToInt(oldFreeHours) + 1, minutesToInt(oldFreeHours))
+    else:
+        newFreeHours = updateHours(oldFreeHours, minutesToAdd)
+    
+    newHorasSemanais = updateHours(oldHorasSemanais, minutesToAdd)
+
+    if hourToInt(newHorasSemanais) >= 40:
+        newFreeHours = WKL_PAUSE
+
+    return [oldDoctor[DOCT_NAME_IDX], newFreeHours, newMinutesDias, newHorasSemanais]
 
 
-def updateDoctors(doctors, requests, previousSched, nextTime):
-	"""
-    Update birth assistance schedule assigning the given birth assistance requested
-    to the given doctors, taking into account a previous schedule.
-	
-	Requires:
-	doctors is a list of lists with the structure as in the output of
-	infoFromFiles.readDoctorsFile concerning the time of previous schedule;
-	requests is a list of lists with the structure as in the output of 
-	infoFromFile.readRequestsFile concerning the current update time;
-	previousSched is a list of lists with the structure as in the output of
-	infoFromFiles.readScheduleFile concerning the previous update time;
-	nextTime is a string in the format HHhMM with the time of the next schedule
-	Ensures:
-	a list of birth assistances, representing the schedule updated at
-	the current update time (= previous update time + 30 minutes),
-	assigned according to the conditions indicated in the general specification
-	of the project (omitted here for the sake of readability).
-	"""
-	
+def updateDoctors(doctors):
+    doctorList = readDoctorsFile(doctors)
+    newDoctors = []
+    for doctor in doctorList:
+        doctor = updateDoctorsTime(doctor, 20)
+        newDoctors.append(doctor)
+    return newDoctors
+
+print(updateDoctors("doctors10h00.txt"))
+
+    
 
 
 
