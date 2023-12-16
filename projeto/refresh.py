@@ -5,7 +5,16 @@
 # 59348 Dmytro Umanskyi 
 # 62263 Eduardo Rocha
 
+from sys import argv
+from infoFromFiles import *
+from dateTime import *
+from planning import *
+from infoToFiles import *
 
+doctorsFileName = argv[1]
+scheduleFileName = argv[2]
+requestsFileName = argv[3]
+    
 
 def plan(doctorsFileName, scheduleFileName, requestsFileName):
     """
@@ -29,8 +38,15 @@ def plan(doctorsFileName, scheduleFileName, requestsFileName):
     scheduleFileName and requestsFileName, and are written in the same directory
     of the latter.
     """
-    
+    #doctors = readDoctorsFile(doctorsFileName)
+    #oldSchedule = readScheduleFile(scheduleFileName)
+    #requests = readRequestsFile(requestsFileName)
+    #doctorsHeader = saveHeader(doctorsFileName)
+    scheduleHeader = saveHeader(scheduleFileName)
+    scheduleHeader[HEADER_TIME_IDX][0] = updateHours(scheduleHeader[HEADER_TIME_IDX][0], 30)
+    newSchedule = updateSchedule(doctorsFileName, requestsFileName, scheduleFileName, scheduleHeader[HEADER_TIME_IDX][0])
+    newScheduleFileName = f"schedule{scheduleHeader[HEADER_TIME_IDX][0]}.txt"
+    writeScheduleFile(newSchedule, scheduleHeader, newScheduleFileName)
 
-
-        
+plan(doctorsFileName, scheduleFileName, requestsFileName)
 
