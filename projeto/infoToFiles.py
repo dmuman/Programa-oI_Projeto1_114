@@ -27,24 +27,31 @@ def writeScheduleFile(sched, header, fileName):
     the lines in this file keeps the ordering top to bottom of 
     the assistances as ordered head to tail in sched.
     """
-    header[HEADER_TIME_IDX][0] = updateHours(header[HEADER_TIME_IDX][0], 30)
+    #header[HEADER_TIME_IDX][0] = updateHours(header[HEADER_TIME_IDX][0], 30)
     #fileName = f"schedule{header[HEADER_TIME_IDX][0]}.txt"
-    outFile = open(fileName, "w", encoding="utf-8")
+    outFileSchedule = open(fileName, "w", encoding="utf-8")
     for headLine in header:
-        outFile.write(' '.join(headLine) + '\n')
+        outFileSchedule.write(' '.join(headLine) + '\n')
     for index, schedule in enumerate(sched):
         if index >= len(sched) - 1:
-            outFile.write(', '.join(schedule))
+            outFileSchedule.write(', '.join(schedule))
         else:
-            outFile.write(', '.join(schedule) + '\n')
+            outFileSchedule.write(', '.join(schedule) + '\n')
 
-    outFile.close()
-
-newSchedule = updateSchedule("doctors16h00.txt", "requests16h30.txt", "schedule16h00.txt", "16h30")
-header = saveHeader("schedule16h00.txt")
-
-writeScheduleFile(newSchedule, header, "schedule160h30.txt")
+    outFileSchedule.close()
 
 
+def writeDoctorsFile(doctors, header, fileName):
+    """
+    
+    """
+    outFileDoctors = open(fileName, "w", encoding="utf-8")
+    for headLine in header:
+        outFileDoctors.write(' '.join(headLine) + '\n')
+    for index, doctor in enumerate(doctors):
+        if index >= len(doctors) - 1:
+            outFileDoctors.write(', '.join(doctor))
+        else:
+            outFileDoctors.write(', '.join(doctor) + '\n')
 
-#def writeDoctorsFile(doctors, header, fileName):
+    outFileDoctors.close()
