@@ -6,44 +6,49 @@
 # 62263 Eduardo Rocha
 
 
-
+#function for transforming string hours to int
 def hourToInt(time):
     """
     Gets the provided time in type string that has the letter 'h' inside of it 
     that separates hours and minutes and then returns the amount of hours in type int.
 
     Requires: time is a string and has the letter 'h' inside that separates hours and minutes.
-    Ensures: the amount of hours in the type of int, that is provided before the letter 'h' inside of the provided time.
+    Ensures: the amount of hours in the type of int, that is provided 
+    before the letter 'h' inside of the provided time.
     Examples:
     >>> hourToInt("14h00")
     14
     >>> hourToInt("09h30")
     9
     """
-    t = time.split("h")
-    hours = int(t[0])
+    t = time.split("h")     #splitting the time by the letter "h"
+    hours = int(t[0])       #getting hours
+
     return hours
 
 
-
+#function for transforming string minutes to int
 def minutesToInt(time):
     """
     Gets the provided time in type string that has the letter 'h' inside of it 
     that separates hours and minutes and then returns the amount of minutes in type int.
 
     Requires: time is a string and has the letter 'h' inside that separates hours and minutes.
-    Ensures: the amount of minutes in the type of int, that is provided after the letter 'h' inside of the provided time.
+    Ensures: the amount of minutes in the type of int, that is provided 
+    after the letter 'h' inside of the provided time.
     Examples:
     >>> minutesToInt("14h00")
     0
     >>> minutesToInt("09h30")
     30
     """
-    t = time.split("h")
-    minutes = int(t[1])
+    t = time.split("h")     #splitting the time by the letter "h"
+    minutes = int(t[1])     #getting the minutes
+
     return minutes
 
 
+#function for transforming string day to int
 def dayToInt(data):
     """
     Gets the provided data in type string that has the two dots sigh ':' inside of it 
@@ -58,11 +63,13 @@ def dayToInt(data):
     >>> dayToInt("01:10:2023")
     1
     """
-    t = data.split(":")
-    day = int(t[0])
+    t = data.split(":")     #splitting the date by the two dots sign ":"
+    day = int(t[0])         #getting the day
+
     return day
 
 
+#function for transforming string month to int
 def monthToInt(data):
     """
     Gets the provided data in type string that has the two dots sigh ':' inside of it 
@@ -76,28 +83,33 @@ def monthToInt(data):
     >>> monthToInt("01:05:2023")
     5
     """
-    t = data.split(":")
-    month = int(t[1])
+    t = data.split(":")     #splitting the date by the two dots sign ":"
+    month = int(t[1])       #getting the month
+
     return month
 
 
+#function for transforming string year to int
 def yearToInt(data):
     """
     Gets the provided data in type string that has the two dots sigh ':' inside of it 
     that separates day, month and year and then returns the year in type int.
 
     Requires: data is a string and has the two dots sign ':' inside that separates day, month and year.
-    Ensures: the year in the type of int, that is provided after the second occurance of the two dots sign ':' inside of the provided data.
+    Ensures: the year in the type of int, that is provided after the second occurance 
+    of the two dots sign ':' inside of the provided data.
     >>> yearToInt("21:12:2023")
     2023
     >>> yearToInt("21:12:0023")
     23
     """
-    t = data.split(":")
-    year = int(t[2])
+    t = data.split(":")     #splitting the date by the two dots sign ":"
+    year = int(t[2])        #getting the year
+
     return year
 
 
+#function for transforming int hours and minutes to string time
 def intToTime(hour, minutes):
     """
     Gets the provided amount of hours and minutes, separated by commas, in the type of int 
@@ -115,15 +127,17 @@ def intToTime(hour, minutes):
     m = str(minutes)
 
     if hour < 10:
-        h = "0" + h
+        h = "0" + h         #adding zero at the beginning to the hours, if hours are less then 10. 9 become "09", for example
 
     if minutes < 10 or minutes == 0:
-        m = "0" + m
+        m = "0" + m         #adding zero at the beginning to the minutes, if minutes are less then 10. 0 become "00", for example
 
-    time = f"{h}h{m}"
+    time = f"{h}h{m}"       #creating a new string for the time
 
     return time
 
+
+#function for transforming int day, month and year to string data
 def intToData(day, month, year):
     """
     Gets the provided day, month and year, separated by commas, in the type of int 
@@ -143,18 +157,21 @@ def intToData(day, month, year):
     y = str(year)
 
     if day < 10:
-        d = "0" + d
+        d = "0" + d         #adding zero at the beginning to the day, if day is less then 10. 6 become "06", for example
 
     if month < 10:
-        m = "0" + m
+        m = "0" + m         #adding zero at the beginning to the month, if month is less then 10. 1 become "01", for example
 
-    data = f"{d}:{m}:{y}"
+    data = f"{d}:{m}:{y}"   #creating a new string for the data
 
     return data
 
+
+#function for updating string time with int minutes
 def updateHours(hoursToUpdate, minutesToAdd):
     """
-    Updates the time with the given time to update and minutes to add. Time is in the format of HHhMM, minutes are integers.
+    Updates the time with the given time to update and minutes to add. 
+    Time is in the format of HHhMM, minutesToAdd are integers.
     Using converting time functions to get the hours and minutes and then to update those.
     It has three cases:
     If the added minutes ultrapassed 60(i.e. more than one hour)
@@ -174,29 +191,36 @@ def updateHours(hoursToUpdate, minutesToAdd):
     >>> updateHours("23h30", 40)
     '00h10'
     """
-    intHours = None
+    #declaring variables for holding the int representatin of hours, minutes and total minutes
+    intHours = None 
     intMinutes = None
     totalMinutes = None
+
+    #declaring variable for the new, updated hours
     updatedHours = None
 
+    #in case new minutes are greater than 60
     if minutesToInt(hoursToUpdate) + minutesToAdd > 60:
-        intHours = hourToInt(hoursToUpdate)
-        intMinutes = minutesToInt(hoursToUpdate)
-        totalMinutes = intHours * 60 + intMinutes + minutesToAdd
-        updatedHours = intToTime((totalMinutes // 60), (totalMinutes % 60))
+        intHours = hourToInt(hoursToUpdate)                                 #assigning hours
+        intMinutes = minutesToInt(hoursToUpdate)                            #assigning minutes
+        totalMinutes = intHours * 60 + intMinutes + minutesToAdd            #new totalMinutes
+        updatedHours = intToTime((totalMinutes // 60), (totalMinutes % 60)) #new, updated hours, based on totalMinutes
 
+    #in case new minutes are equal 60
     elif minutesToInt(hoursToUpdate) + minutesToAdd == 60:
-        intHours = hourToInt(hoursToUpdate) + 1
-        intMinutes = 0
-        updatedHours = intToTime(intHours, intMinutes)
+        intHours = hourToInt(hoursToUpdate) + 1         #updating hours(adding 1 hour)
+        intMinutes = 0                                  #updating minutes(equal 00)
+        updatedHours = intToTime(intHours, intMinutes)  #new, updated hours
 
+    #in case new minutes are less than 60
     else:
-        intHours = hourToInt(hoursToUpdate)
-        intMinutes = minutesToInt(hoursToUpdate) + minutesToAdd
-        updatedHours = intToTime(intHours, intMinutes)
+        intHours = hourToInt(hoursToUpdate)                     #assigning hours. they remain the same
+        intMinutes = minutesToInt(hoursToUpdate) + minutesToAdd #updating minutes with minutesToAdd
+        updatedHours = intToTime(intHours, intMinutes)          #new, updated hours
 
     return updatedHours
 
+#testing part
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
