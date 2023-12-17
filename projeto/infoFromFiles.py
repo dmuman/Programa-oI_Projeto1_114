@@ -78,9 +78,9 @@ def readDoctorsFile(fileName):
         timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Doctors:":
-            raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
+            raise IOError(f"scope inconsistency between name and header in file <{fileName}>")
         elif timeInName != timeInHeader:
-            raise ValueError("time in the header and in the name are not the same")
+            raise IOError("time in the header and in the name are not the same")
         else:
             doctorsList = [] 
             for line in inFile:
@@ -90,7 +90,7 @@ def readDoctorsFile(fileName):
 
         return doctorsList
     
-    except Exception as e:
+    except IOError as e:
         print(f"File head error: {e}")
 
 
@@ -116,9 +116,9 @@ def readRequestsFile(fileName):
         timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Mothers:":
-            raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
+            raise IOError(f"scope inconsistency between name and header in file <{fileName}>")
         elif timeInName != timeInHeader:
-            raise ValueError("time in the header and in the name are not the same")
+            raise IOError("time in the header and in the name are not the same")
         else:
             requestsList = [] 
             for line in inFile:
@@ -128,7 +128,7 @@ def readRequestsFile(fileName):
 
         return requestsList
     
-    except Exception as e:
+    except IOError as e:
         print(f"File head error: {e}")
 
 
@@ -153,9 +153,9 @@ def readScheduleFile(fileName):
         timeInHeader = timeAndDataFromHeader(fileName)[0][0]
 
         if saveHeader(fileName)[6][0] != "Schedule:":
-            raise ValueError(f"scope inconsistency between name and header in file <{fileName}>")
+            raise IOError(f"scope inconsistency between name and header in file <{fileName}>")
         elif timeInName != timeInHeader:
-            raise ValueError("time in the header and in the name are not the same")
+            raise IOError("time in the header and in the name are not the same")
         else: 
             scheduleList = [] 
             for line in inFile:
@@ -165,5 +165,5 @@ def readScheduleFile(fileName):
 
         return scheduleList
     
-    except Exception as e:
+    except IOError as e:
         print(f"File head error: {e}")
