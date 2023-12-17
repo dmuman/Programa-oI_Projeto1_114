@@ -36,11 +36,7 @@ def sortSchedule(scheduleList):
     """
     Sorts schedule  
     """
-    totalTime = None
-    if scheduleList[0] == REDIR_HOURS:
-        totalTime = hourToInt("23h59")*60 + minutesToInt("23h59")
-    else:
-        totalTime = hourToInt(scheduleList[0])*60 + minutesToInt(scheduleList[0])
+    totalTime = hourToInt(scheduleList[0])*60 + minutesToInt(scheduleList[0])
     
     return totalTime
 
@@ -68,10 +64,10 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
     
     newScheduleList = []
 
-    #part for redirecting to the other network (works great)
+    #part for redirecting to the other network if hours are greater then 20 (works great)
     for assignedTimeFromOldSchedule in readScheduleFile(previousSched):
         if hourToInt(updateHours(assignedTimeFromOldSchedule[0], 20)) >= 20:
-            horasAssigned = REDIR_HOURS
+            horasAssigned = intToTime(hourToInt(saveHeader(requests)[HEADER_TIME_IDX][0]), minutesToInt(saveHeader(requests)[HEADER_TIME_IDX][0]))
             doctorAssigned = REDIR_STR
 
     #part for adding mothers from the old schedule if the time of the appointment 
@@ -107,7 +103,7 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
                 isDoctorAssigned = True
 
         if not isDoctorAssigned:
-            horasAssigned = REDIR_HOURS
+            horasAssigned = intToTime(hourToInt(saveHeader(requests)[HEADER_TIME_IDX][0]), minutesToInt(saveHeader(requests)[HEADER_TIME_IDX][0]))
             doctorAssigned = REDIR_STR
             appointment = [horasAssigned, mother[MOTH_NAME_IDX], doctorAssigned]
             newScheduleList.append(appointment)
