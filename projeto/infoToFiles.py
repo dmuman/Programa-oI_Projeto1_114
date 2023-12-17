@@ -10,14 +10,16 @@ from dateTime import *
 from planning import *
 from infoFromFiles import *
 
+
+#function for writing new schedule file
 def writeScheduleFile(sched, header, fileName):
     """
     Writes a collection of scheduled birth assistances into a file.
 
     Requires:
     sched is a list with the structure as in the output of
-    planning.updateSchedule representing the cruises assigned;
-    header is a string with a header, as in the examples provided in 
+    planning.updateSchedule representing the mothers assigned;
+    header is a list with a header, as in the examples provided in 
     the general specification (omitted here for the sake of readability);
     fileName is a str with the name of a .txt file.
     Ensures:
@@ -27,31 +29,44 @@ def writeScheduleFile(sched, header, fileName):
     the lines in this file keeps the ordering top to bottom of 
     the assistances as ordered head to tail in sched.
     """
-    #header[HEADER_TIME_IDX][0] = updateHours(header[HEADER_TIME_IDX][0], 30)
-    #fileName = f"schedule{header[HEADER_TIME_IDX][0]}.txt"
-    outFileSchedule = open(fileName, "w", encoding="utf-8")
-    for headLine in header:
-        outFileSchedule.write(' '.join(headLine) + '\n')
-    for index, schedule in enumerate(sched):
-        if index >= len(sched) - 1:
-            outFileSchedule.write(', '.join(schedule))
-        else:
-            outFileSchedule.write(', '.join(schedule) + '\n')
+    outFileSchedule = open(fileName, "w", encoding="utf-8")     #opening the file for writing
+    for headLine in header:                                     #searching through header
+        outFileSchedule.write(' '.join(headLine) + '\n')        #writing the header line by line to the file
+    for index, schedule in enumerate(sched):                    #searching through index and schedule in sched
+        if index >= len(sched) - 1:                             #check if it's the last list in sched
+            outFileSchedule.write(', '.join(schedule))          #if it's writing the file without the paragraph(i.e. "\n") at the end
+        else:                                                   #check if it's not the last list in sched
+            outFileSchedule.write(', '.join(schedule) + '\n')   #if it's not writing the file wit the paragraph(i.e. "\n") at the end
 
-    outFileSchedule.close()
+    outFileSchedule.close()                                     #closing the file, so the memory is free
 
 
+#function for writing new doctors file
 def writeDoctorsFile(doctors, header, fileName):
     """
-    
-    """
-    outFileDoctors = open(fileName, "w", encoding="utf-8")
-    for headLine in header:
-        outFileDoctors.write(' '.join(headLine) + '\n')
-    for index, doctor in enumerate(doctors):
-        if index >= len(doctors) - 1:
-            outFileDoctors.write(', '.join(doctor))
-        else:
-            outFileDoctors.write(', '.join(doctor) + '\n')
+    Writes a collection of updated doctors into a file.
 
-    outFileDoctors.close()
+    Requires:
+    doctors is a list with the structure as in the output of
+    planning.updateDoctors representing the updated doctors;
+    header is a list with a header, as in the examples provided in 
+    the general specification (omitted here for the sake of readability);
+    fileName is a str with the name of a .txt file.
+
+    Ensures:
+    writing of file named fileName representing the updated doctors,
+    one per line, as organized in the examples provided
+    in the general specification (omitted here for the sake of readability); 
+    the lines in this file keeps the ordering top to bottom of 
+    the updated doctors as ordered head to tail in doctors.
+    """
+    outFileDoctors = open(fileName, "w", encoding="utf-8")      #opening the file for writing
+    for headLine in header:                                     #searching through header
+        outFileDoctors.write(' '.join(headLine) + '\n')         #writing the header line by line to the file
+    for index, doctor in enumerate(doctors):                    #searching through index and doctor in doctors
+        if index >= len(doctors) - 1:                           #check if it's the last list in doctors
+            outFileDoctors.write(', '.join(doctor))             #if it's writing the file without the paragraph(i.e. "\n") at the end
+        else:                                                   #check if it's not the last list in doctors
+            outFileDoctors.write(', '.join(doctor) + '\n')      #if it's not writing the file wit the paragraph(i.e. "\n") at the end
+
+    outFileDoctors.close()                                      #closing the file, so the memory is free
