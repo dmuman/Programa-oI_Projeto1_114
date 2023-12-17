@@ -11,7 +11,14 @@ from constants import *
 
 def sortRequests(requestlist):
 	"""
-    Sorts mothers
+    Sorts mothers(i.e. requests) in decrescent order of risks. 
+    If they're the same - in decrescent order of tags. 
+    If they're the same - in decrescent order of age. 
+    If they're the same - in alphabetical order of names.
+
+    Requires: requestList is a list of list, each list represents a mother(i.e. request).
+
+    Ensures: tuple, containing the risk, tag, age and name of the corresponding mother(i.e. request).
 	"""
 	risks={"high":1, "low":2}
 	tags={"red": 3, "yellow":2, "green":1}
@@ -21,7 +28,15 @@ def sortRequests(requestlist):
 
 def sortDoctors(doctorsList):
     """
-    Sorts doctors
+    Sorts doctors in decrescent order of their skills.
+    If they're the same - in decrescent order of time that's left until 1 hour pause.
+    If they're the same - in decrescent order of time that's left until weekly leave.
+    If they're the same - in the alphabetical order of the names.
+
+    Requires: doctorsList is a list of list, each list represents a doctor.
+
+    Ensures: tuple, containing the skill, time left unti 1 hour pause, 
+    time left unti weekly leave and name of the corresponding doctor.
     """
     
     if int(doctorsList[DOCT_DAILY_HOURS_IDX]) > 240:
@@ -32,13 +47,22 @@ def sortDoctors(doctorsList):
 
     return (-int(doctorsList[DOCT_SKILL_IDX]), -timeToPause, -timeToWeeklyPause, doctorsList[DOCT_NAME_IDX])
 
+
 def sortSchedule(scheduleList):
     """
-    Sorts schedule  
+    Sorts schedule in crescent order of schedule's time.
+    If they're the same - in alphabetical order of mother's name.
+    If they're the same - in alphabetical order of doctor's name.
+
+    Reqires: scheduleList is a list of lists, each list represents a schedule.
+
+    Ensures: tuple, containing the time of the schedule(total), 
+    name of the corresponding mother and name of the corresponding doctor.
     """
     totalTime = hourToInt(scheduleList[0])*60 + minutesToInt(scheduleList[0])
     
-    return totalTime
+    return totalTime, scheduleList[MOTH_NAME_IDX], scheduleList[DOCT_NAME_IDX]
+
 
 def updateSchedule(doctors, requests, previousSched, nextTime):
     """
@@ -53,6 +77,7 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
 	previousSched is a list of lists with the structure as in the output of
 	infoFromFiles.readScheduleFile concerning the previous update time;
 	nextTime is a string in the format HHhMM with the time of the next schedule
+
 	Ensures:
 	a list of birth assistances, representing the schedule updated at
 	the current update time (= previous update time + 30 minutes),
@@ -110,11 +135,20 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
     newSortedScheduleList = sorted(newScheduleList, key=sortSchedule)
     return newSortedScheduleList
 
-#print(updateSchedule("doctors14h00.txt", "requests14h30.txt", "schedule14h00.txt", "14h30"))
 
 def updateDoctorsTime(oldDoctor, minutesToAdd):
     """
-    
+    Updates the next free time of the corresponding doctor with the given amount of minuts. 
+    Checks if the new time is ultrapassing the 240 minutes limit. 
+    If so - adding 1 hour to the next free time(i.e. 1 hour pause).
+    Also checks if the week worked hours is ultrapassing the 40 hours limit.
+    If so - doctor will receive weekly leave(i.e. next free time = "weekly leave")
+
+    Requires: oldDoctor is a list, containing information about corresponding doctor.
+    I.e. name, his skill level, next free time, daily minutes worked, weekly hours worked.
+
+    Ensures: updated list that represents new doctor, containing updated next free time, 
+    daily worked minutes and weekly worked hours.
     """
     oldFreeHours = oldDoctor[DOCT_BIRTH_END_IDX]
     oldMinutesDias = oldDoctor[DOCT_DAILY_HOURS_IDX]
@@ -148,7 +182,17 @@ def updateDoctorsTime(oldDoctor, minutesToAdd):
 
 def updateDoctors(doctors):
     """
-    
+    Update the doctors information taking into account a previous doctors information.
+	
+	Requires:
+	doctors is a list of lists with the structure as in the output of
+	infoFromFiles.readDoctorsFile concerning the time of previous schedule;
+	
+	Ensures:
+	a list of doctors, representing the doctors updated at
+	the current update time (= previous update time + 30 minutes),
+	according to the conditions indicated in the general specification
+	of the project (omitted here for the sake of readability).
     """
     doctorList = readDoctorsFile(doctors)
     timeInHeader = saveHeader(doctors)[HEADER_TIME_IDX][0]
