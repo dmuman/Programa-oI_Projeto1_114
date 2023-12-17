@@ -11,11 +11,13 @@ from dateTime import *
 from planning import *
 from infoToFiles import *
 
+#declaring variables for the file's name of doctors, schedule and requests using argv from the module sys
 doctorsFileName = argv[1]
 scheduleFileName = argv[2]
 requestsFileName = argv[3]
     
 
+#main fuction, that runs the program
 def plan(doctorsFileName, scheduleFileName, requestsFileName):
     """
     Runs the birthPlan application.
@@ -26,7 +28,8 @@ def plan(doctorsFileName, scheduleFileName, requestsFileName):
     scheduleFileName is a str with the name of a .txt file containing a list
     of birth assistances assigned to doctors at date d and time t, as in the examples provided;
     requestsFileName is a str with the name of a .txt file containing a list
-    of cruises requested at date d and time t+30mins;
+    of mothers requested at date d and time t+30mins;
+    
     Ensures:
     writing of two .txt files containing the updated list of doctors assigned
     to mothers and the updated list of birth assistances, according to 
@@ -38,22 +41,30 @@ def plan(doctorsFileName, scheduleFileName, requestsFileName):
     scheduleFileName and requestsFileName, and are written in the same directory
     of the latter.
     """
-    #doctors = readDoctorsFile(doctorsFileName)
-    #oldSchedule = readScheduleFile(scheduleFileName)
-    #requests = readRequestsFile(requestsFileName)
+
     try:
+        #declaring variables for the headers from old doctors and schedule
         doctorsHeader = saveHeader(doctorsFileName)
         scheduleHeader = saveHeader(scheduleFileName)
+
+        #updating the time in the headers by 30 minutes
         scheduleHeader[HEADER_TIME_IDX][0] = updateHours(scheduleHeader[HEADER_TIME_IDX][0], 30)
         doctorsHeader[HEADER_TIME_IDX][0] = updateHours(doctorsHeader[HEADER_TIME_IDX][0], 30)
+
+        #declaring variables for the new schedule and new doctors, using update functions from the planning module
         newSchedule = updateSchedule(doctorsFileName, requestsFileName, scheduleFileName, scheduleHeader[HEADER_TIME_IDX][0])
         newDoctors = updateDoctors(doctorsFileName)
-        newScheduleFileName = f"schedule{scheduleHeader[HEADER_TIME_IDX][0]}.txt"
-        newDoctorsFileName = f"doctors{doctorsHeader[HEADER_TIME_IDX][0]}.txt"
+
+        #declaring variables for new names of the output files
+        newScheduleFileName = f"schedule{scheduleHeader[HEADER_TIME_IDX][0]}.txt"   #adding the proper time in the name from the updated header
+        newDoctorsFileName = f"doctors{doctorsHeader[HEADER_TIME_IDX][0]}.txt"      #adding the proper time in the name from the updated header
+        
+        #writing new files, using writing functions from the infoToFiles module
         writeScheduleFile(newSchedule, scheduleHeader, newScheduleFileName)
         writeDoctorsFile(newDoctors, doctorsHeader, newDoctorsFileName)
-    except Exception as e:
-        print("", end="")
+
+    except Exception:       #cathing and exception
+        print("", end="")   #and ignoring it(i.e. printing exception only from the infoFromFiles module)
 
 
-plan(doctorsFileName, scheduleFileName, requestsFileName)
+plan(doctorsFileName, scheduleFileName, requestsFileName) #executing the function(i.e. the whole program)
