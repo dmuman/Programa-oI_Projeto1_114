@@ -85,7 +85,7 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
 
     mothersList = readRequestsFile(requests)
     doctorsList = readDoctorsFile(doctors)
-
+    
     sortedMothers = sorted(mothersList, key=sortRequests)
     sortedDoctors = sorted(doctorsList, key=sortDoctors)
 
@@ -114,6 +114,7 @@ def updateSchedule(doctors, requests, previousSched, nextTime):
     newSortedScheduleList = sorted(newScheduleList, key=sortSchedule)
     return newSortedScheduleList
 
+#print(updateSchedule("doctors14h00.txt", "requests14h30.txt", "schedule14h00.txt", "14h30"))
 
 def updateDoctorsTime(oldDoctor, minutesToAdd):
     """
@@ -125,9 +126,19 @@ def updateDoctorsTime(oldDoctor, minutesToAdd):
     newFreeHours = None
     newHorasSemanais = None
     newMinutesDias = int(oldMinutesDias) + minutesToAdd
+    hoursFromOldHours = hourToInt(oldFreeHours)
+    minutesFromOldHours = minutesToInt(oldFreeHours)
+
+    if minutesFromOldHours < 30:
+        minutesFromOldHours = minutesToInt(oldFreeHours) + (30 - minutesToInt(oldFreeHours))
+        oldFreeHours = intToTime(hoursFromOldHours, minutesFromOldHours)
+        newFreeHours = updateHours(oldFreeHours, minutesToAdd)
     
-    if newMinutesDias >= 240:
-        newFreeHours = intToTime(hourToInt(oldFreeHours) + 1, minutesToInt(oldFreeHours))
+    if int(oldMinutesDias) < 240:
+        if newMinutesDias >= 240:
+            newFreeHours = intToTime(hourToInt(oldFreeHours) + 1, minutesToInt(oldFreeHours)+20)
+        else:
+            newFreeHours = updateHours(oldFreeHours, minutesToAdd)
     else:
         newFreeHours = updateHours(oldFreeHours, minutesToAdd)
     
@@ -136,29 +147,20 @@ def updateDoctorsTime(oldDoctor, minutesToAdd):
     if hourToInt(newHorasSemanais) >= 40:
         newFreeHours = WKL_PAUSE
 
-    return [oldDoctor[DOCT_NAME_IDX], newFreeHours, newMinutesDias, newHorasSemanais]
+    return [oldDoctor[DOCT_NAME_IDX], str(oldDoctor[DOCT_SKILL_IDX]), newFreeHours, str(newMinutesDias), newHorasSemanais]
 
 
 def updateDoctors(doctors):
+    """
+    
+    """
     doctorList = readDoctorsFile(doctors)
+    timeInHeader = saveHeader(doctors)[HEADER_TIME_IDX][0]
     newDoctors = []
     for doctor in doctorList:
-        doctor = updateDoctorsTime(doctor, 20)
-        newDoctors.append(doctor)
+        if hourToInt(doctor[DOCT_BIRTH_END_IDX])*60 + minutesToInt(doctor[DOCT_BIRTH_END_IDX]) < (hourToInt(timeInHeader)+1)*60:
+            doctor = updateDoctorsTime(doctor, 20)
+            newDoctors.append(doctor)
+        else:
+            newDoctors.append(doctor)
     return newDoctors
-
-print(updateDoctors("doctors10h00.txt"))
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
