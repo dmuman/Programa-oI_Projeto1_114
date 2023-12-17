@@ -41,12 +41,19 @@ def plan(doctorsFileName, scheduleFileName, requestsFileName):
     #doctors = readDoctorsFile(doctorsFileName)
     #oldSchedule = readScheduleFile(scheduleFileName)
     #requests = readRequestsFile(requestsFileName)
-    #doctorsHeader = saveHeader(doctorsFileName)
-    scheduleHeader = saveHeader(scheduleFileName)
-    scheduleHeader[HEADER_TIME_IDX][0] = updateHours(scheduleHeader[HEADER_TIME_IDX][0], 30)
-    newSchedule = updateSchedule(doctorsFileName, requestsFileName, scheduleFileName, scheduleHeader[HEADER_TIME_IDX][0])
-    newScheduleFileName = f"schedule{scheduleHeader[HEADER_TIME_IDX][0]}.txt"
-    writeScheduleFile(newSchedule, scheduleHeader, newScheduleFileName)
+    try:
+        doctorsHeader = saveHeader(doctorsFileName)
+        scheduleHeader = saveHeader(scheduleFileName)
+        scheduleHeader[HEADER_TIME_IDX][0] = updateHours(scheduleHeader[HEADER_TIME_IDX][0], 30)
+        doctorsHeader[HEADER_TIME_IDX][0] = updateHours(doctorsHeader[HEADER_TIME_IDX][0], 30)
+        newSchedule = updateSchedule(doctorsFileName, requestsFileName, scheduleFileName, scheduleHeader[HEADER_TIME_IDX][0])
+        newDoctors = updateDoctors(doctorsFileName)
+        newScheduleFileName = f"schedule{scheduleHeader[HEADER_TIME_IDX][0]}.txt"
+        newDoctorsFileName = f"doctors{doctorsHeader[HEADER_TIME_IDX][0]}.txt"
+        writeScheduleFile(newSchedule, scheduleHeader, newScheduleFileName)
+        writeDoctorsFile(newDoctors, doctorsHeader, newDoctorsFileName)
+    except Exception as e:
+        print("", end="")
+
 
 plan(doctorsFileName, scheduleFileName, requestsFileName)
-
