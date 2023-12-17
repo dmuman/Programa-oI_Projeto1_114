@@ -137,7 +137,7 @@ def intToTime(hour, minutes):
     return time
 
 
-#function for transforming int day, month and year to string data
+#function for transforming int day, month and year to string date
 def intToData(day, month, year):
     """
     Gets the provided day, month and year, separated by commas, in the type of int 
