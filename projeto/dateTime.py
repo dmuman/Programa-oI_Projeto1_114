@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+a#-*- coding: utf-8 -*-
 
 # 2023-2024 Programação 1 (LTI)
 # Grupo 114
@@ -51,8 +51,8 @@ def minutesToInt(time):
 #function for transforming string day to int
 def dayToInt(data):
     """
-    Gets the provided data in type string that has the two dots sigh ':' inside of it 
-    that separates day, month and year and then returns the day in type int.
+    Gets the provided data in type string separated by colons (:).
+    That separates day, month and year and then returns the day in type int.
 
     Requires: data is a string and has the two dots sign ':' inside that separates day, month and year.
     Ensures: the day in the type of int, that is provided before the first occurance 
@@ -72,9 +72,9 @@ def dayToInt(data):
 #function for transforming string month to int
 def monthToInt(data):
     """
-    Gets the provided data in type string that has the two dots sigh ':' inside of it 
-    that separates day, month and year and then returns the month in type int.
-
+    Gets the provided data in type string separated by colons (:).
+    That separates day, month and year and then returns the month in type int.
+    
     Requires: data is a string and has the two dots sign ':' inside that separates day, month and year.
     Ensures: the month in the type of int, that is provided between the first and the second occurance 
     of the two dots sign ':' inside of the provided data.
@@ -92,8 +92,8 @@ def monthToInt(data):
 #function for transforming string year to int
 def yearToInt(data):
     """
-    Gets the provided data in type string that has the two dots sigh ':' inside of it 
-    that separates day, month and year and then returns the year in type int.
+    Gets the provided data in type string separated by colons (:).
+    That separates day, month and year and then returns the year in type int.
 
     Requires: data is a string and has the two dots sign ':' inside that separates day, month and year.
     Ensures: the year in the type of int, that is provided after the second occurance 
@@ -113,8 +113,7 @@ def yearToInt(data):
 def intToTime(hour, minutes):
     """
     Gets the provided amount of hours and minutes, separated by commas, in the type of int 
-    and returns the time of type string with the look of 'hourshminutes'. 
-    Hours and minutes are separated by the letter 'h'.
+    and returns the time of type string. Hours and minutes are separated by the letter 'h'.
 
     Requires: hour and minutes are positive integers, hour is less than 24 and minutes is less than 60.
     Ensures: string representation of the provided amount of hours and minutes, separated by the letter 'h'.
@@ -141,12 +140,11 @@ def intToTime(hour, minutes):
 def intToData(day, month, year):
     """
     Gets the provided day, month and year, separated by commas, in the type of int 
-    and returns the data of type string with the look of 'day:month:year'.
-    Day, month and year are separated by the two dots sign ':'.
+    and returns the data of type string with the format 'day:month:year'.
 
     Requires: day, month and year are positive integers, day is less than 32, 
     month is less than 13 and year is equal to the current year(2023).
-    Ensures: string representation of the provided day, month and year, separated by the two dots sign ':'.
+    Ensures: string representation of the provided day, month and year, separated by colons (:).
     >>> intToData(8, 1, 2023)
     '08:01:2023'
     >>> intToData(21, 12, 2023)
@@ -174,9 +172,9 @@ def updateHours(hoursToUpdate, minutesToAdd):
     Time is in the format of HHhMM, minutesToAdd are integers.
     Using converting time functions to get the hours and minutes and then to update those.
     It has three cases:
-    If the added minutes ultrapassed 60(i.e. more than one hour)
-    If the added minutes is iqual 60(i.e. iqual one hour)
-    If the added minutes are less than 60(i.e. less than one hour)
+    If the added minutes pass 60(i.e. more than one hour)
+    If the added minutes is equal 60(i.e. iqual one hour)
+    If the added minutes is less than 60(i.e. less than one hour)
 
     Requires: hoursToUpdate is a string in the format of HHhMM, minutesToAdd is integer
 
