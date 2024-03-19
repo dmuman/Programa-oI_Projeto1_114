@@ -1,4 +1,4 @@
-a#-*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 
 # 2023-2024 Programação 1 (LTI)
 # Grupo 114
