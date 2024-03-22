@@ -5,8 +5,8 @@ The project is fully functioning. (except for one test)
 
 To start the program from cmd: **python3 refresh.py inputFile1 inputFile2 inputFile3**
 Where:
-**inputFile1** is a file with doctors.
-**inputFile2** is a file with schedules.
-**inputFile3** is a file with requests (mothers).
+- **inputFile1** is a file with doctors.
+- **inputFile2** is a file with schedules.
+- **inputFile3** is a file with requests (mothers).
 
 Test files are in the testFiles folder
